@@ -96,22 +96,26 @@ class Game extends React.Component {
 		const history = this.state.history;
 		const current = history[this.state.stepNumber];
 		const winner = calculateWinner(current.squares);
-		let reverseHistory = history.reverse();
 		let isReverse = this.state.isReverse;
-		let historyList = isReverse ? reverseHistory : history;
 
-		const moves = historyList.map((step, move) => {
+		const moves = history.map((step, move) => {
 			const desc = move ? "Go to move #" + move : "Go to game start";
 			let moveButton = "idel";
 			if(this.state.selectedMove === move) {
 				moveButton = "active";
 			}
 			return (
-				<li key={move}>
+				<li key={move + isReverse}>
 					<button className={moveButton} onClick={() => this.jumpTo(move)}>{desc}</button>
 				</li>
 			)
 		})
+
+
+		let toggleTitle = isReverse ? "Descending" : "Ascending";
+		let reverseMove = moves.slice();
+		reverseMove.reverse();
+		let finalMoves = isReverse ? reverseMove : moves;
 
 		let status;
 		if(winner) {
@@ -136,9 +140,9 @@ class Game extends React.Component {
 							onChange={() => this.handleSwitch(this.state.isReverse)}
 							value={true}
 						/>
-						{"Switch"}
+						{toggleTitle}
 					</div>
-					<ol>{moves}</ol>
+					<ol>{finalMoves}</ol>
 				</div>
 			</div>
 		)
