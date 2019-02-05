@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Switch from '@material-ui/core/Switch';
 import './index.css';
 
 function Square(props){
@@ -85,6 +86,12 @@ class Game extends React.Component {
 		});
 	}
 
+	handleSwitch(data) {
+		this.setState({
+			isReverse: !data
+		});
+	}
+
 	render() {
 		const history = this.state.history;
 		const current = history[this.state.stepNumber];
@@ -123,7 +130,14 @@ class Game extends React.Component {
 				</div>
 				<div className="game-info">
 					<div>{status}</div>
-					<div>{"add targle, set state"}</div>
+					<div>
+						<Switch
+							checked={this.state.isReverse}
+							onChange={() => this.handleSwitch(this.state.isReverse)}
+							value={true}
+						/>
+						{"Switch"}
+					</div>
 					<ol>{moves}</ol>
 				</div>
 			</div>
