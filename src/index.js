@@ -14,6 +14,18 @@ const LINES = [
 	[2, 4, 6],
 ];
 
+const LOCATION = [
+	"1 | 1",
+	"2 | 1",
+	"3 | 1",
+	"1 | 2",
+	"2 | 2",
+	"3 | 2",
+	"1 | 3",
+	"2 | 3",
+	"3 | 3"
+]
+
 function Square(props){
 	let boldSquare = props.bold;
 	let bold = {
@@ -77,7 +89,8 @@ class Game extends React.Component {
 			stepNumber: 0,
 			xIsNext: true,
 			selectedMove: null,
-			isReverse: false
+			isReverse: false,
+			location: []
 		}
 	}
 
@@ -88,12 +101,15 @@ class Game extends React.Component {
 		if(this.calculateWinner(squares) || this.calculateWinner(squares) === 0 || squares[i]) {
 			return;
 		}
+		let location = this.state.location;
+		location.push(LOCATION[i]);
 
 		squares[i] = this.state.xIsNext ? "X" : "O";
 		this.setState({
 			history: history.concat([{
 				squares: squares
 			}]),
+			location: location,
 			stepNumber: history.length,
 			xIsNext: !this.state.xIsNext
 		})
@@ -132,7 +148,7 @@ class Game extends React.Component {
 		let draw = false;
 
 		const moves = history.map((step, move) => {
-			const desc = move ? "Go to move #" + move : "Go to game start";
+			const desc = move ? "Go to move #" + move + " - " + this.state.location[move - 1]: "Go to game start";
 			let moveButton = "idel";
 			if(this.state.selectedMove === move) {
 				moveButton = "active";
