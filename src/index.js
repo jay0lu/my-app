@@ -3,17 +3,6 @@ import ReactDOM from 'react-dom';
 import Switch from '@material-ui/core/Switch';
 import './index.css';
 
-function Square(props){
-	return (
-		<button
-			className="square"
-			onClick={props.onClick}
-		>
-			{props.value}
-		</button>
-	);
-}
-
 const LINES = [
 	[0, 1, 2],
 	[3, 4, 5],
@@ -25,22 +14,44 @@ const LINES = [
 	[2, 4, 6],
 ];
 
+function Square(props){
+	let boldSquare = props.bold;
+	let bold = {
+		color: "green"
+	}
+	let buttonStyle = boldSquare ? bold : null;
+	return (
+		<button
+			style={buttonStyle}
+			className="square"
+			onClick={props.onClick}
+		>
+			{props.value}
+		</button>
+	);
+}
+
 class Board extends React.Component {
-	renderSquare(i) {
+	renderSquare(i, bold) {
 		return (
 			<Square
 				value={this.props.squares[i]}
 				onClick={() => this.props.onClick(i)}
+				bold={bold}
 			/>
 		);
 	}
 
 	render() {
+		const line = this.props.line;
 		let grid = [];
 		for(let i = 0; i < 3; i++) {
 			let bordRow = [];
 			for(let j = 0; j < 3; j++) {
-				bordRow.push(this.renderSquare(i * 3 + j));
+				let num = i * 3 + j;
+				let bold = false;
+				if( line && line.indexOf(num) >= 0) bold = true;
+				bordRow.push(this.renderSquare(num, bold));
 			}
 			let row = (
 				<div className="board-row">
@@ -66,8 +77,7 @@ class Game extends React.Component {
 			stepNumber: 0,
 			xIsNext: true,
 			selectedMove: null,
-			isReverse: false,
-			winLine: null
+			isReverse: false
 		}
 	}
 
@@ -118,6 +128,7 @@ class Game extends React.Component {
 		const current = history[this.state.stepNumber];
 		const winner = this.calculateWinner(current.squares);
 		let isReverse = this.state.isReverse;
+		const winLine = LINES[winner];
 
 		const moves = history.map((step, move) => {
 			const desc = move ? "Go to move #" + move : "Go to game start";
@@ -151,6 +162,7 @@ class Game extends React.Component {
 					<Board
 						squares={current.squares}
 						onClick={i => this.handleClick(i)}
+						line={winLine}
 					/>
 				</div>
 				<div className="game-info">
