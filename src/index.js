@@ -129,6 +129,7 @@ class Game extends React.Component {
 		const winner = this.calculateWinner(current.squares);
 		let isReverse = this.state.isReverse;
 		const winLine = LINES[winner];
+		let draw = false;
 
 		const moves = history.map((step, move) => {
 			const desc = move ? "Go to move #" + move : "Go to game start";
@@ -136,6 +137,7 @@ class Game extends React.Component {
 			if(this.state.selectedMove === move) {
 				moveButton = "active";
 			}
+			if(move === 9 && !winner && winner !== 0) draw = true;
 			return (
 				<li key={move + isReverse}>
 					<button className={moveButton} onClick={() => this.jumpTo(move)}>{desc}</button>
@@ -152,8 +154,10 @@ class Game extends React.Component {
 		let status;
 		if(winner || winner === 0) {
 			status = "Winner: " + current.squares[LINES[winner][0]];
-		}else{
+		}else if (!draw) {
 			status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+		}else {
+			status = "Resule: Draw"
 		}
 
 		return (
