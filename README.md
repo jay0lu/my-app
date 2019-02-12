@@ -1,4 +1,4 @@
-TODO:
+Functions:
 - [x] Display the location for each move in the format (col, row) in the move history list.
 - [x] Bold the currently selected item in the move list.
 - [x] Rewrite Board to use two loops to make the squares instead of hardcoding them.
